@@ -102,7 +102,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Platform" && PV.IsMine)
+        if (collision.gameObject.tag == "Platform" || collision.gameObject.tag == "Player" && PV.IsMine)
         {
             AN.SetBool("isJumping", false);
             isJumping = false;

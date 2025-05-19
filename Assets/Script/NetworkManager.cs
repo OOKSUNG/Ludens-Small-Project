@@ -7,6 +7,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public InputField NickNameInput;
     public GameObject DisconnectPanel;
+    //플레이어 입장마다 캐릭터 다르게
+    public int PlayerDivision = 1;
     //public GameObject RespawnPanel;
 
     private void Awake()
@@ -27,7 +29,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         DisconnectPanel.SetActive(false);
-        Spawn();
+        int division = PhotonNetwork.CurrentRoom.PlayerCount % 2 == 0 ? -1 : 1;
+        Spawn(division);
     }
 
     private void Update()
@@ -35,10 +38,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) { PhotonNetwork.Disconnect(); }
     }
 
-    public void Spawn()
+    public void Spawn(int division)
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
-        //RespawnPanel.SetActive(false);
+        if(division == 1)PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
+        else PhotonNetwork.Instantiate("Player0", new Vector3(0, 0, 0), Quaternion.identity);
     }
 
     void GameEnd()

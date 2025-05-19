@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NickNameInput: {fileID: 780593835}
   DisconnectPanel: {fileID: 1915610686}
+  PlayerDivision: 1
 --- !u!4 &158399821
 Transform:
   m_ObjectHideFlags: 0
