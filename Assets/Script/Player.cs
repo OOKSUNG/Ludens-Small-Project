@@ -6,6 +6,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using Photon.Pun.Demo.PunBasics;
 using Cinemachine;
+using JetBrains.Annotations;
 
 public class Player : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -23,7 +24,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
     public bool isJumping = false;
     public float maxSpeed = 0.1f;
     public bool isDie = false;
-    public int health = 3;
+    public int health = 1;
 
     Vector3 curPos;
 
@@ -34,15 +35,16 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
         if (PV.IsMine)
         {
-            //var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
-            //CM.Follow = transform;
-            //CM.LookAt = transform;
+            var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
+            CM.Follow = transform;
+            CM.LookAt = transform;
         }
 
         RB = GetComponent<Rigidbody2D>();
         SR = GetComponent<SpriteRenderer>();
         AN = GetComponent<Animator>();
         CC = GetComponent<CapsuleCollider2D>();
+        PV = GetComponent<PhotonView>();
     }
 
     void Update()
@@ -108,25 +110,28 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
             isJumping = false;
         }
 
+        if (collision.gameObject.tag == "Check" && PV.IsMine)
+        {
+            photonView.RPC("RequestStageMove", RpcTarget.MasterClient);
+        }
+
+        if (collision.gameObject.tag == "Enemy" && PV.IsMine)
+        {
+            OnDamaged();
+        }
     }
 
     void OnDamaged()
     {
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamaged");
-
-        SR.color = new Color(1, 1, 1, 0.4f);
-
-
-        AN.SetTrigger("doDamaged");
-
-        Invoke("OffDamaged", 3);
+        //gameObject.layer = LayerMask.NameToLayer("PlayerDamaged");
+        //SR.color = new Color(1, 1, 1, 0.4f);
+        //AN.SetTrigger("isHit");
+        //Invoke("OffDamaged", 3);
         health--;
 
         if (health <= 0 && PV.IsMine)
         {
-            GameObject.Find("Canvas").transform.Find("health 1").gameObject.SetActive(false);
-            GameObject.Find("Canvas").transform.Find("RespawnPanel").gameObject.SetActive(true);
-            PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+            photonView.RPC("RequestAllBack", RpcTarget.MasterClient);
         }
     }
 
@@ -143,16 +148,59 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void FlipXRPC(float axis) => SR.flipX = axis == -1;
-
-    [PunRPC]
-    void JumpRPC()
+    void RequestStageMove()
     {
-        RB.velocity = Vector2.zero;
-        RB.AddForce(Vector2.up * 700);
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        // 모든 캐릭터를 이동
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            PhotonView pv = player.GetComponent<PhotonView>();
+            if (pv != null)
+            {
+                pv.RPC("StageMove", pv.Owner);
+            }
+        }
+
+        // 모든 클라이언트에게 다음 스테이지 생성
+        photonView.RPC("StartNextStage", RpcTarget.All);
     }
 
+    [PunRPC]
+    void RequestAllBack()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
 
+        // 모든 캐릭터를 이동
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            PhotonView pv = player.GetComponent<PhotonView>();
+            if (pv != null)
+            {
+                pv.RPC("StageMove", pv.Owner);
+            }
+        }
+    }
+
+    [PunRPC]
+    void StageMove()
+    {
+        if (PV.IsMine)
+        {
+            transform.position = new Vector3(0, 3, 0);
+        }
+    }
+
+    [PunRPC]
+    void StartNextStage()
+    {
+        GameManager.instance.MakeNextStage();
+    }
+
+    [PunRPC]
+    void FlipXRPC(float axis) => SR.flipX = axis == -1;
 
     [PunRPC]
     void DestroyRPC() => Destroy(gameObject);

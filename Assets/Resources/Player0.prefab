@@ -277,7 +277,7 @@ MonoBehaviour:
   isJumping: 1
   maxSpeed: 4
   isDie: 0
-  health: 3
+  health: 1
 --- !u!114 &2815858342779771279
 MonoBehaviour:
   m_ObjectHideFlags: 0

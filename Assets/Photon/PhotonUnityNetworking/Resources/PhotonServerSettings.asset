@@ -42,6 +42,11 @@ MonoBehaviour:
   - DestroyRPC
   - FlipXRPC
   - JumpRPC
+  - StageMove
+  - MoveToCenter
+  - StartNextStage
+  - RequestStageMove
+  - RequestAllBack
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
