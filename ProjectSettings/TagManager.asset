@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - Check
   - Enemy
+  - BOX
   layers:
   - Default
   - TransparentFX

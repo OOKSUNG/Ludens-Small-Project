@@ -81,7 +81,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
             if (h != 0)
             {
-                AN.SetBool("walk", true);
+                AN.SetBool("isWalking", true);
                 PV.RPC("FlipXRPC", RpcTarget.AllBuffered, h); // 재접속시 filpX를 동기화해주기 위해서 AllBuffered
             }
 
@@ -104,7 +104,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Platform" || collision.gameObject.tag == "Player" && PV.IsMine)
+        if (collision.gameObject.tag == "Platform" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "BOX" && PV.IsMine)
         {
             AN.SetBool("isJumping", false);
             isJumping = false;
