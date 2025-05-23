@@ -9,7 +9,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject DisconnectPanel;
     //플레이어 입장마다 캐릭터 다르게
     public int PlayerDivision = 1;
-    //public GameObject RespawnPanel;
+    public bool isStart = false;
+
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        isStart = true;
         DisconnectPanel.SetActive(false);
         int division = PhotonNetwork.CurrentRoom.PlayerCount % 2 == 0 ? -1 : 1;
         Spawn(division);
