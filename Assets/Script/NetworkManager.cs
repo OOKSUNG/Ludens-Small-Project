@@ -7,7 +7,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public InputField NickNameInput;
     public GameObject DisconnectPanel;
-    //ÇÃ·¹ÀÌ¾î ÀÔÀå¸¶´Ù Ä³¸¯ÅÍ ´Ù¸£°Ô
+    //í”Œë ˆì´ì–´ ì…ì¥ë§ˆë‹¤ ìºë¦­í„° ë‹¤ë¥´ê²Œ
     public int PlayerDivision = 1;
     public bool isStart = false;
 
@@ -42,8 +42,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Spawn(int division)
     {
-        if(division == 1)PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
-        else PhotonNetwork.Instantiate("Player0", new Vector3(0, 0, 0), Quaternion.identity);
+        if(division == 1)PhotonNetwork.Instantiate("Player1", new Vector3(0, 0, 0), Quaternion.identity);
+        else PhotonNetwork.Instantiate("Player2", new Vector3(0, 0, 0), Quaternion.identity);
     }
 
     void GameEnd()
