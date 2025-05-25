@@ -67,8 +67,8 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
                 SR.flipX = Input.GetAxisRaw("Horizontal") == -1;
                 AN.SetBool("isWalking", true);
             }
-
         }
+        if(transform.position.y < -8f) OnDamaged();
   
     }
 
@@ -92,8 +92,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
             else if (RB.velocity.x < (-1) * maxSpeed)
                 RB.velocity = new Vector2(-maxSpeed, RB.velocity.y);
-
-
 
             if (!isJumping)
             {
@@ -159,7 +157,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
             PhotonView pv = player.GetComponent<PhotonView>();
             if (pv != null)
             {
-                pv.RPC("StageMove", pv.Owner);
+                pv.RPC("StageMove", RpcTarget.All, new Vector3(0, 3, 0));
             }
         }
 
@@ -179,18 +177,19 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
             PhotonView pv = player.GetComponent<PhotonView>();
             if (pv != null)
             {
-                pv.RPC("StageMove", pv.Owner);
+                pv.RPC("StageMove", RpcTarget.All, new Vector3(0, 3, 0));
             }
         }
     }
 
     [PunRPC]
-    void StageMove()
+    void StageMove(Vector3 newPosition)
     {
-        if (PV.IsMine)
-        {
-            transform.position = new Vector3(0, 3, 0);
-        }
+        // 모든 클라이언트에서 위치 이동
+        transform.position = newPosition;
+
+        // 비활성화/활성화 대신 필요한 경우 다른 방식으로 처리
+        // 예: 애니메이션 재생, 리스폰 효과 등
     }
 
     [PunRPC]

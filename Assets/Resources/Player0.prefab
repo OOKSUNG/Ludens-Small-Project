@@ -273,7 +273,7 @@ MonoBehaviour:
   SR: {fileID: 4138136131481420292}
   PV: {fileID: 2815858342779771279}
   NickNameText: {fileID: 2734803430000050732}
-  jumpPower: 5
+  jumpPower: 7
   isJumping: 1
   maxSpeed: 4
   isDie: 0
