@@ -9,9 +9,12 @@ public class GameManager : MonoBehaviour
     public NetworkManager nM;
     public GameObject StageCanvas;
     public Text stageText;
+    public Text scoreText;
     public GameObject[] Stages;
     public int stageNum = 0;
     public int lastStage = 10;
+    public int score = 0;
+    public int[] coinCounts = new int[] { 3, 3, 3, 3 };
 
     //ΩÃ±€≈Ê
     public static GameManager instance;
@@ -37,6 +40,7 @@ public class GameManager : MonoBehaviour
     {
         if(nM.isStart) StageCanvas.SetActive(true);
         stageText.text = "Stage :" + (stageNum + 1);
+        scoreText.text = score.ToString() + "/" + coinCounts[stageNum];
     }
 
     public void MakeNextStage()
@@ -45,9 +49,9 @@ public class GameManager : MonoBehaviour
         {
             Stages[stageNum++].SetActive(false);
             Stages[stageNum].SetActive(true);
+
+            score = 0;
         }
     }
-
-
 
 }

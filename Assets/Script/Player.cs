@@ -110,12 +110,25 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
         if (collision.gameObject.tag == "Check" && PV.IsMine)
         {
-            photonView.RPC("RequestStageMove", RpcTarget.MasterClient);
+            if(GameManager.instance.score == GameManager.instance.coinCounts[GameManager.instance.stageNum])
+            {
+                photonView.RPC("RequestStageMove", RpcTarget.MasterClient);
+            }
+            else
+            {
+                // Coin을 다 먹지 못했는데, 다음레벨로 가려고 할 때 뭔가 플레이어에게 알려줄수도.
+            }
         }
 
         if (collision.gameObject.tag == "Enemy" && PV.IsMine)
         {
             OnDamaged();
+        }
+
+        if(collision.gameObject.tag == "Coin" && PV.IsMine)
+        {
+            Destroy(collision.gameObject);
+            GameManager.instance.score++;
         }
     }
 
