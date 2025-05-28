@@ -15,6 +15,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
     public Animator AN;
     public SpriteRenderer SR;
     public PhotonView PV;
+    public AudioSource AS;
     public Text NickNameText;
 
     //public GameObject WinPanel;
@@ -45,6 +46,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
         AN = GetComponent<Animator>();
         CC = GetComponent<CapsuleCollider2D>();
         PV = GetComponent<PhotonView>();
+        AS = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -53,6 +55,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetButtonDown("Jump") && !isJumping)
             {
+                AS.Play();
                 RB.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
                 AN.SetBool("isJumping", true);
                 AN.SetBool("isWalking", false);
@@ -127,8 +130,8 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
 
         if(collision.gameObject.tag == "Coin" && PV.IsMine)
         {
-            Destroy(collision.gameObject);
-            GameManager.instance.score++;
+            collision.gameObject.GetComponent<PhotonView>().RPC("DestroySelf", RpcTarget.All);
+            photonView.RPC("RequestScoreIncrease", RpcTarget.MasterClient);
         }
     }
 
@@ -217,6 +220,21 @@ public class Player : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void DestroyRPC() => Destroy(gameObject);
 
+    [PunRPC]
+    void RequestScoreIncrease()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        GameManager.instance.score++;
+        photonView.RPC("SyncScore", RpcTarget.All, GameManager.instance.score);
+    }
+
+    [PunRPC]
+    void SyncScore(int syncedScore)
+    {
+        GameManager.instance.score = syncedScore;
+        GameManager.instance.UpdateScoreUI();
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

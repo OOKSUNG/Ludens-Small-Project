@@ -8,11 +8,11 @@ public class GameManager : MonoBehaviour
 {
     public NetworkManager nM;
     public GameObject StageCanvas;
+    public GameObject OverPanel;
     public Text stageText;
     public Text scoreText;
     public GameObject[] Stages;
     public int stageNum = 0;
-    public int lastStage = 10;
     public int score = 0;
     public int[] coinCounts = new int[] { 3, 3, 3, 3 };
 
@@ -45,13 +45,24 @@ public class GameManager : MonoBehaviour
 
     public void MakeNextStage()
     {
-        if (stageNum != lastStage)
+        if (stageNum < Stages.Length)
         {
-            Stages[stageNum++].SetActive(false);
-            Stages[stageNum].SetActive(true);
+            Stages[stageNum].SetActive(false);
+            stageNum++; 
 
-            score = 0;
+            if (stageNum < Stages.Length - 1)
+            {
+                Stages[stageNum].SetActive(true);
+                score = 0;
+            }
+            else
+            {
+                OverPanel.SetActive(true);
+            }
         }
     }
-
+    public void UpdateScoreUI()
+    {
+        scoreText.text = "Score: " + score;
+    }
 }
