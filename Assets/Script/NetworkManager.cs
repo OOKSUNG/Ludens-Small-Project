@@ -7,7 +7,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public InputField NickNameInput;
     public GameObject DisconnectPanel;
-    
     //플레이어 입장마다 캐릭터 다르게
     public int PlayerDivision = 1;
     public bool isStart = false;
@@ -31,6 +30,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         isStart = true;
+        GameManager.instance.StageCanvas.SetActive(true);
         DisconnectPanel.SetActive(false);
         int division = PhotonNetwork.CurrentRoom.PlayerCount % 2 == 0 ? -1 : 1;
         Spawn(division);
@@ -49,7 +49,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void QuitGame()
     {
         Application.Quit();
-
         // 에디터에서는 종료가 안되므로 로그 출력용 코드 추가 (디버깅용)
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -60,10 +59,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         
         //RespawnPanel.SetActive(true);
     }
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        DisconnectPanel.SetActive(true);
-        //RespawnPanel.SetActive(false);
-    }
+    public override void OnDisconnected(DisconnectCause cause) => DisconnectPanel.SetActive(true);//RespawnPanel.SetActive(false);
 
 }

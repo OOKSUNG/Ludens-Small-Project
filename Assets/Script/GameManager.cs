@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(nM.isStart) StageCanvas.SetActive(true);
         stageText.text = "Stage :" + (stageNum + 1);
         scoreText.text = score.ToString() + "/" + coinCounts[stageNum];
     }
@@ -57,6 +56,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                StageCanvas.SetActive(false);
                 OverPanel.SetActive(true);
             }
         }
