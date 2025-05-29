@@ -47,6 +47,7 @@ MonoBehaviour:
   - StartNextStage
   - RequestStageMove
   - RequestAllBack
+  - TogglePassablePlayer
   - DestroySelf
   - AddScoreAll
   - RequestScoreIncrease
