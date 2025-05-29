@@ -5,7 +5,7 @@ using UnityEngine;
 public class Button : MonoBehaviour
 {
     public GameObject GO;
-
+    public bool isAppear = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,10 +20,12 @@ public class Button : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        GO.SetActive(false);
+        if(!isAppear)GO.SetActive(false);
+        else GO.SetActive(true);
     }
     void OnCollisionExit2D(Collision2D collision)
     {
-        GO.SetActive(true);
+        if (!isAppear) GO.SetActive(true);
+        else GO.SetActive(false);
     }
 }
