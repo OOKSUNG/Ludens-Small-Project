@@ -48,6 +48,10 @@ MonoBehaviour:
   - RequestStageMove
   - RequestAllBack
   - TogglePassablePlayer
+  - DestroySelf
+  - AddScoreAll
+  - RequestScoreIncrease
+  - SyncScore
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

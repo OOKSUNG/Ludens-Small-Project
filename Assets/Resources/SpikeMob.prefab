@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8558869745227528357}
   - component: {fileID: 7803914429264102958}
   - component: {fileID: 6514501344487156045}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SpikeMob
   m_TagString: Enemy
   m_Icon: {fileID: 0}
